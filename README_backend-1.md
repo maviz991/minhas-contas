@@ -195,6 +195,5 @@ O Prisma oferece uma interface visual para interagir com o banco de dados, perfe
 
 ---
 
-### Próximos Passos
-
+### Próximos Passos fff
 Com a fundação do banco de dados completa e verificada, o próximo passo é construir os **endpoints da API** usando Express.js para permitir que o frontend (nosso app React Native) possa consumir e manipular esses dados.
