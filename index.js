@@ -19,6 +19,7 @@ app.use('/categories', categoriesRouter);
 
 
 const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
+// Linha nova
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Servidor rodando em http://localhost:${PORT} e na sua rede!`);
 });
