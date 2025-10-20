@@ -1,9 +1,3 @@
-Excelente ideia. Este foi, sem dúvida, um dos aprendizados mais densos e valiosos de todo o projeto. Formalizar isso em um documento é a melhor maneira de garantir que você nunca mais passe por essa dificuldade.
-
-Aqui está um arquivo `NETWORK-DEBUGGING.md` que você pode salvar na raiz do seu projeto. Ele conta a história da nossa jornada de depuração.
-
----
-
 # Guia de Debugging de Rede: Conectando React Native ao Backend WSL
 
 Este documento detalha o processo de diagnóstico e solução de problemas de rede encontrados ao tentar conectar um aplicativo React Native (rodando em um celular na rede Wi-Fi) a uma API Node.js (rodando dentro do ambiente WSL2 no Windows).
