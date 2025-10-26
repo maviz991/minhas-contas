@@ -1,33 +1,49 @@
-import { Tabs } from 'expo-router';
 import React from 'react';
-
-import { HapticTab } from '@/components/haptic-tab';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { Tabs, useRouter } from 'expo-router'; // 1. Adicione useRouter aqui
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const router = useRouter(); // 2. Crie uma instância do router aqui
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-      }}>
+        tabBarActiveTintColor: '#007AFF',
+        tabBarInactiveTintColor: 'gray',
+      }}
+    >
+      {/* Aba 1: Contas */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Contas',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="list-alt" color={color} />,
         }}
       />
+
+      {/* Aba 2: Botão Central de Adicionar */}
       <Tabs.Screen
-        name="explore"
+        name="add-placeholder"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Adicionar',
+          tabBarIcon: ({ color }) => <FontAwesome size={34} name="plus-circle" color={color} />,
+        }}
+        listeners={{
+          tabPress: (e) => {
+            // Previne a navegação padrão
+            e.preventDefault(); 
+            // 3. TROQUE O ALERT POR ESTA LINHA:
+            router.push('/add-account'); 
+          },
+        }}
+      />
+      
+      {/* Aba 3: Transações */}
+      <Tabs.Screen
+        name="transactions"
+        options={{
+          title: 'Transações',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="exchange" color={color} />,
         }}
       />
     </Tabs>

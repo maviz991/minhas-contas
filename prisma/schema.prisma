@@ -47,3 +47,14 @@ model Transaction {
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
 }
+
+// Modelos de contas a pagar
+model Conta {
+  id          Int      @id @default(autoincrement())
+  nome        String
+  valor       Float
+  vencimento  DateTime
+  pago        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

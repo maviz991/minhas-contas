@@ -21,7 +21,7 @@ router.post('/', async (req, res) => {
     const newAccount = await prisma.account.create({
       data: {
         name,
-        balance: balance ? parseFloat(balance) : 0, // Saldo inicial é opcional
+        balance: balance ? parseFloat(balance) : 0, // Saldo inicial
       },
     });
     res.status(201).json(newAccount);

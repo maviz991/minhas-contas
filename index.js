@@ -5,6 +5,8 @@ import cors from 'cors';
 import transactionsRouter from './routes/transactions.routes.js';
 import accountsRouter from './routes/accounts.routes.js';
 import categoriesRouter from './routes/categories.routes.js';
+import contasRoutes from './routes/contas.routes.js';
+
 
 const app = express();
 
@@ -16,6 +18,7 @@ app.use(cors());
 app.use('/transactions', transactionsRouter);
 app.use('/accounts', accountsRouter);
 app.use('/categories', categoriesRouter);
+app.use('/contas', contasRoutes);
 
 
 const PORT = 3001;

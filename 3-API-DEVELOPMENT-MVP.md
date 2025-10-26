@@ -1,11 +1,3 @@
-Claro! Ótima ideia. Manter a documentação atualizada é uma disciplina que economiza muito tempo no futuro. É a marca de um projeto bem cuidado.
-
-Vamos atualizar nosso arquivo `API-DEVELOPMENT.md` para incluir a lógica de negócio e a refatoração do código que você implementou.
-
-Abaixo está o conteúdo atualizado. Você pode simplesmente copiar e colar, substituindo a versão antiga do arquivo.
-
----
-
 # Guia de Desenvolvimento da API - Minhas Contas (v2)
 
 Este documento é a continuação do `README.md` (Guia de Setup) e detalha o processo de construção, teste e depuração dos endpoints da API do projeto "Minhas Contas".
