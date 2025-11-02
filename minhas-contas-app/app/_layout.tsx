@@ -18,10 +18,10 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         
         <Stack.Screen 
-          name="add-account" // Mude de "modal" para "add-account"
+          name="add-bill" // Mude de "modal" para "add-account"
           options={{ 
             presentation: 'modal', 
-            title: 'Nova Conta' // Título opcional, mas melhor
+            title: 'Nova Fatura' // Título opcional, mas melhor
           }} 
         />
 

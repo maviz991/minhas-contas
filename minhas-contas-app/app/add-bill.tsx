@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Button, Switch, Alert, Platform, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { createConta } from '../services/ContasService';
+import { createBill } from '../services/BillsService';
 
-export default function AddAccountModal() {
+// MUDOU AQUI: O nome do componente para refletir o que ele faz
+export default function AddBillModal() {
   const router = useRouter();
   const [nome, setNome] = useState('');
   const [valor, setValor] = useState('');
@@ -12,18 +13,15 @@ export default function AddAccountModal() {
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
-    // Validação dos campos
+    // ... (a lógica de validação continua a mesma) ...
     if (!nome.trim() || !valor.trim() || !vencimento.trim()) {
       Alert.alert('Erro', 'Por favor, preencha todos os campos obrigatórios.');
       return;
     }
-
-    // Validação do formato da data (simples)
     if (!/^\d{4}-\d{2}-\d{2}$/.test(vencimento)) {
         Alert.alert('Erro de Formato', 'Use o formato de data AAAA-MM-DD.');
         return;
     }
-
     const valorNumerico = parseFloat(valor.replace(',', '.'));
     if (isNaN(valorNumerico)) {
       Alert.alert('Erro de Valor', 'O valor inserido é inválido.');
@@ -32,23 +30,21 @@ export default function AddAccountModal() {
 
     setLoading(true);
     try {
-      await createConta({
+      await createBill({
         nome,
         valor: valorNumerico,
         vencimento,
         pago,
       });
       
-      // router.back() pode ser instável em alguns casos de modal.
-      // router.dismiss() é mais seguro, mas pode não estar disponível.
-      // Usar `goBack` é uma alternativa robusta.
       if (router.canGoBack()) {
         router.back();
       }
 
     } catch (error) {
-      Alert.alert('Erro na API', 'Não foi possível cadastrar a conta. Verifique o console para mais detalhes.');
-      console.error(error); // Loga o erro para depuração
+      // MUDOU AQUI: Mensagem de erro mais específica
+      Alert.alert('Erro na API', 'Não foi possível cadastrar a fatura. Verifique o console para mais detalhes.');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -56,12 +52,14 @@ export default function AddAccountModal() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Adicionar Nova Conta</Text>
+      {/* MUDOU AQUI: Título da tela */}
+      <Text style={styles.title}>Adicionar Nova Fatura</Text>
       
-      <Text style={styles.label}>Nome da Conta</Text>
+      {/* MUDOU AQUI: Label do campo */}
+      <Text style={styles.label}>Nome da Fatura</Text>
       <TextInput
         style={styles.input}
-        placeholder="Ex: Conta de Luz"
+        placeholder="Ex: Fatura do Cartão"
         value={nome}
         onChangeText={setNome}
       />
@@ -99,10 +97,10 @@ export default function AddAccountModal() {
         onPress={handleSave} 
         disabled={loading}
       >
-        <Text style={styles.buttonText}>{loading ? 'Salvando...' : 'Salvar Conta'}</Text>
+        {/* MUDOU AQUI: Texto do botão */}
+        <Text style={styles.buttonText}>{loading ? 'Salvando...' : 'Salvar Fatura'}</Text>
       </TouchableOpacity>
 
-      {/* Botão para fechar o modal, útil no iOS */}
       {Platform.OS === 'ios' && (
          <TouchableOpacity 
             style={[styles.button, styles.closeButton]} 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { Tabs, useRouter } from 'expo-router'; // 1. Adicione useRouter aqui
+import { Tabs, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function TabLayout() {
-  const router = useRouter(); // 2. Crie uma instância do router aqui
+  const router = useRouter();
 
   return (
     <Tabs
@@ -12,11 +12,11 @@ export default function TabLayout() {
         tabBarInactiveTintColor: 'gray',
       }}
     >
-      {/* Aba 1: Contas */}
+      {/* Aba 1: Faturas (Contas a Pagar) */}
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Contas',
+          title: 'Faturas', // <-- CORREÇÃO APLICADA AQUI
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="list-alt" color={color} />,
         }}
       />
@@ -30,10 +30,8 @@ export default function TabLayout() {
         }}
         listeners={{
           tabPress: (e) => {
-            // Previne a navegação padrão
             e.preventDefault(); 
-            // 3. TROQUE O ALERT POR ESTA LINHA:
-            router.push('/add-account'); 
+            router.push('/add-bill'); // Esta parte já estava correta!
           },
         }}
       />

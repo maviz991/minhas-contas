@@ -1,4 +1,4 @@
-export interface Conta {
+export interface Bill {
   id: number;
   nome: string;
   valor: number;
