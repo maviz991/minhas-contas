@@ -6,43 +6,39 @@ export default function TabLayout() {
   const router = useRouter();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#007AFF',
-        tabBarInactiveTintColor: 'gray',
-      }}
-    >
-      {/* Aba 1: Faturas (Contas a Pagar) */}
+    <Tabs /* ...screenOptions... */ >
+      {/* Aba 1: Faturas (index.tsx) */}
       <Tabs.Screen
         name="index"
-        options={{
-          title: 'Faturas', // <-- CORREÇÃO APLICADA AQUI
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="list-alt" color={color} />,
-        }}
+        options={{ title: 'Faturas', tabBarIcon: ({ color }) => <FontAwesome size={28} name="list-alt" color={color} /> }}
       />
 
-      {/* Aba 2: Botão Central de Adicionar */}
+      {/* --- NOVA ABA: CONTAS FINANCEIRAS --- */}
+      <Tabs.Screen
+        name="accounts" // Corresponde ao novo arquivo accounts.tsx
+        options={{
+          title: 'Contas',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="bank" color={color} />,
+        }}
+      />
+      
+      {/* Aba Central: Adicionar */}
       <Tabs.Screen
         name="add-placeholder"
-        options={{
-          title: 'Adicionar',
-          tabBarIcon: ({ color }) => <FontAwesome size={34} name="plus-circle" color={color} />,
-        }}
+        options={{ title: 'Adicionar', tabBarIcon: ({ color }) => <FontAwesome size={34} name="plus-circle" color={color} /> }}
         listeners={{
           tabPress: (e) => {
             e.preventDefault(); 
-            router.push('/add-bill'); // Esta parte já estava correta!
+            // No futuro, este botão abrirá um menu: "Adicionar Fatura" ou "Adicionar Transação"
+            router.push('/add-bill');
           },
         }}
       />
       
-      {/* Aba 3: Transações */}
+      {/* Aba 4: Transações */}
       <Tabs.Screen
         name="transactions"
-        options={{
-          title: 'Transações',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="exchange" color={color} />,
-        }}
+        options={{ title: 'Transações', tabBarIcon: ({ color }) => <FontAwesome size={28} name="exchange" color={color} /> }}
       />
     </Tabs>
   );
