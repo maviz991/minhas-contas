@@ -56,6 +56,8 @@ export default function RootLayout() {
             title: 'Nova Fatura' 
           }} 
         />
+        <Stack.Screen name="add-transaction" options={{ headerShown: false, presentation: 'modal' }} />
+        <Stack.Screen name="select-category" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
     </ThemeProvider>

@@ -1,9 +1,9 @@
-import React, { ComponentProps } from 'react'; // 1. Importe o ComponentProps do React
+import React, { ComponentProps } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
 
-// --- (A paleta de cores continua a mesma) ---
 const COLORS = {
   background: '#111813',
   card: '#1C2C22',
@@ -13,17 +13,14 @@ const COLORS = {
   accentRed: '#E74C3C',
 };
 
-// 2. Crie um tipo para a transação, especificando o tipo do ícone
 type Transacao = {
   id: number;
-  // Esta é a mágica: o tipo do ícone é o mesmo tipo que a prop 'name' do FontAwesome espera
   icon: ComponentProps<typeof FontAwesome>['name'];
   nome: string;
   valor: number;
   data: string;
 };
 
-// 3. Aplique o tipo ao nosso array de dados
 const transacoesRecentes: Transacao[] = [
     { id: 1, icon: 'shopping-cart', nome: 'Supermercado do Mês', valor: -450.30, data: 'Hoje' },
     { id: 2, icon: 'money', nome: 'Salário', valor: 5000.00, data: 'Ontem' },
@@ -31,40 +28,43 @@ const transacoesRecentes: Transacao[] = [
 ];
 
 export default function DashboardScreen() {
-  // O resto do componente continua exatamente o mesmo
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <ScrollView 
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.headerOla}>Olá, Lucas Costa</Text>
+            <Text style={styles.headerOla}>Olá, Maria</Text>
           </View>
           <FontAwesome name="cog" size={24} color={COLORS.textSecondary} />
         </View>
 
-        {/* Card de Saldo Atual */}
         <View style={styles.saldoCard}>
           <Text style={styles.saldoLabel}>Saldo Atual</Text>
           <Text style={styles.saldoValor}>R$ 7.593,50</Text>
         </View>
 
-        {/* Botões de Ação */}
         <View style={styles.actionButtonsContainer}>
-          <TouchableOpacity style={[styles.actionButton, {backgroundColor: COLORS.primary + '30'}]}>
+          <TouchableOpacity 
+            style={[styles.actionButton, {backgroundColor: COLORS.primary + '30'}]}
+            onPress={() => router.push('/add-transaction')}
+          >
              <FontAwesome name="plus" size={16} color={COLORS.primary} />
             <Text style={[styles.actionButtonText, {color: COLORS.primary}]}>Receita</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.actionButton, {backgroundColor: COLORS.accentRed + '30'}]}>
+          <TouchableOpacity 
+            style={[styles.actionButton, {backgroundColor: COLORS.accentRed + '30'}]}
+            onPress={() => router.push('/add-transaction')}
+          >
             <FontAwesome name="minus" size={16} color={COLORS.accentRed} />
             <Text style={[styles.actionButtonText, {color: COLORS.accentRed}]}>Despesa</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Lista de Transações Recentes */}
         <View style={styles.transacoesContainer}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Transações Recentes</Text>
@@ -75,7 +75,6 @@ export default function DashboardScreen() {
           {transacoesRecentes.map(item => (
             <View key={item.id} style={styles.transacaoItem}>
               <View style={styles.transacaoIcon}>
-                {/* Agora o TypeScript está feliz, pois sabe que item.icon é um nome válido */}
                 <FontAwesome name={item.icon} size={20} color={COLORS.textSecondary} />
               </View>
               <View style={styles.transacaoInfo}>
@@ -93,7 +92,6 @@ export default function DashboardScreen() {
   );
 }
 
-// --- (Os estilos continuam os mesmos) ---
 const styles = StyleSheet.create({
   container: {
     flex: 1,

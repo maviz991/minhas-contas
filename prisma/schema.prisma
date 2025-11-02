@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
@@ -11,50 +11,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Modelo para suas contas (banco, carteira, etc.)
+// Modelo para suas contas financeiras (banco, carteira, etc.)
 model Account {
-  id        String   @id @default(cuid())
-  name      String   @unique // O nome da conta deve ser único
+  id        Int      @id @default(autoincrement()) // MUDADO para Int para consistência
+  name      String   @unique
   balance   Float    @default(0)
   createdAt DateTime @default(now())
 
-  transactions Transaction[] // Uma conta pode ter várias transações
+  transactions Transaction[]
 }
 
-// Modelo para suas categorias (Alimentação, Transporte, etc.)
+// Modelo para suas categorias (Alimentação, Transporte, etc.) - VERSÃO UNIFICADA
 model Category {
-  id   String @id @default(cuid())
-  name String @unique // O nome da categoria deve ser único
-
-  transactions Transaction[] // Uma categoria pode ter várias transações
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  icon  String
+  color String
+  type  String // 'INCOME' ou 'EXPENSE'
+  transactions Transaction[]
 }
 
-// Modelo principal, para cada transação (receita ou despesa)
+// Modelo principal para cada transação (receita ou despesa) - VERSÃO UNIFICADA
 model Transaction {
-  id          String   @id @default(cuid())
+  id          Int      @id @default(autoincrement())
   description String
-  amount      Float // Valor da transação
-  date        DateTime @default(now())
-  type        String // Será "RECEITA" ou "DESPESA"
+  amount      Float
+  date        DateTime
+  type        String // 'INCOME' ou 'EXPENSE'
   createdAt   DateTime @default(now())
 
   // --- Relações ---
-  // Diz que esta transação pertence a UMA conta
-  account   Account @relation(fields: [accountId], references: [id])
-  accountId String
+  account     Account  @relation(fields: [accountId], references: [id])
+  accountId   Int // Deve ser do mesmo tipo que Account.id
 
-  // Diz que esta transação pertence a UMA categoria
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+  category    Category @relation(fields: [categoryId], references: [id])
+  categoryId  Int // Deve ser do mesmo tipo que Category.id
 }
 
-// Modelos de contas a pagar
+// Modelo para contas a pagar (faturas)
 model Bill {
-  id          Int      @id @default(autoincrement())
-  nome        String
-  valor       Float
-  vencimento  DateTime
-  pago        Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  nome       String
+  valor      Float
+  vencimento DateTime
+  pago       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

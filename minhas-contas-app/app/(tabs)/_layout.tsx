@@ -3,15 +3,12 @@ import { View } from 'react-native';
 import { Tabs, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
-// Paleta de cores baseada nos seus protótipos
 const COLORS = {
-  backgroundDark: '#1C2C22', // Fundo da TabBar
-  primary: '#13ec5b',         // Verde principal (ativo)
-  inactive: '#9db9a6',       // Cinza/Verde para ícones inativos
-  white: '#FFFFFF',
+  backgroundDark: '#1C2C22',
+  primary: '#13ec5b',
+  inactive: '#9db9a6',
 };
 
-// Componente customizado para o botão de Adicionar flutuante
 const AddButtonIcon = () => (
   <View
     style={{
@@ -21,9 +18,7 @@ const AddButtonIcon = () => (
       borderRadius: 32,
       justifyContent: 'center',
       alignItems: 'center',
-      // Sobe o botão em relação à barra
       transform: [{ translateY: -20 }],
-      // Sombra para dar profundidade
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.3,
@@ -45,15 +40,13 @@ export default function TabLayout() {
         tabBarInactiveTintColor: COLORS.inactive,
         tabBarStyle: {
           backgroundColor: COLORS.backgroundDark,
-          borderTopWidth: 0, // Remove a linha superior padrão
+          borderTopWidth: 0,
           height: 60,
           paddingBottom: 5,
         },
-        // Esconde o header padrão, pois cada tela terá seu próprio header customizado
         headerShown: false, 
       }}
     >
-      {/* Aba 1: Painel (nosso novo Dashboard) */}
       <Tabs.Screen
         name="index"
         options={{
@@ -62,7 +55,6 @@ export default function TabLayout() {
         }}
       />
       
-      {/* Aba 2: Faturas (antiga lista de contas a pagar) */}
       <Tabs.Screen
         name="bills"
         options={{
@@ -71,24 +63,21 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Botão Central de Adicionar */}
       <Tabs.Screen
         name="add-placeholder"
         options={{
-          title: '', // Sem título visível
+          title: '',
           tabBarIcon: () => <AddButtonIcon />,
         }}
         listeners={{
           tabPress: (e) => {
             e.preventDefault();
-            // No futuro, isso abrirá o modal "Nova Transação"
-            // Por enquanto, mantemos o "Adicionar Fatura" para não quebrar a funcionalidade
-            router.push('/add-bill'); 
+            // AQUI ESTÁ A MUDANÇA
+            router.push('/add-transaction'); 
           },
         }}
       />
       
-      {/* Aba 4: Contas Financeiras */}
       <Tabs.Screen
         name="accounts"
         options={{
@@ -97,7 +86,6 @@ export default function TabLayout() {
         }}
       />
 
-      {/* Aba 5: Transações (ainda é um placeholder) */}
       <Tabs.Screen
         name="transactions"
         options={{

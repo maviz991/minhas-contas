@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 // ROTA GET /bills -> Listar todas as faturas
 router.get('/', async (req, res) => {
   try {
+    // CORREÇÃO: trocado prisma.conta por prisma.bill
     const bills = await prisma.bill.findMany({
       orderBy: {
         vencimento: 'asc',
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
     res.json(formattedBills);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Não foi possível buscar as faturas.' }); // Mensagem ajustada
+    res.status(500).json({ error: 'Não foi possível buscar as faturas.' });
   }
 });
 
@@ -33,6 +34,7 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ error: 'Campos nome, valor e vencimento são obrigatórios.' });
     }
 
+    // CORREÇÃO: trocado prisma.conta por prisma.bill
     const newBill = await prisma.bill.create({
       data: {
         nome,
@@ -44,7 +46,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(newBill);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Não foi possível criar a fatura.' }); // Mensagem ajustada
+    res.status(500).json({ error: 'Não foi possível criar a fatura.' });
   }
 });
 
@@ -58,6 +60,7 @@ router.patch('/:id', async (req, res) => {
       return res.status(400).json({ error: "O campo 'pago' deve ser um valor booleano (true/false)." });
     }
 
+    // CORREÇÃO: trocado prisma.conta por prisma.bill
     const updatedBill = await prisma.bill.update({
       where: {
         id: parseInt(id),
@@ -71,9 +74,9 @@ router.patch('/:id', async (req, res) => {
   } catch (error) {
     console.error(error);
     if (error.code === 'P2025') {
-        return res.status(404).json({ error: 'Fatura não encontrada.' }); // Mensagem ajustada
+        return res.status(404).json({ error: 'Fatura não encontrada.' });
     }
-    res.status(500).json({ error: 'Não foi possível atualizar a fatura.' }); // Mensagem ajustada
+    res.status(500).json({ error: 'Não foi possível atualizar a fatura.' });
   }
 });
 
