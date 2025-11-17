@@ -5,9 +5,9 @@ import { useRouter } from 'expo-router';
 const { width } = Dimensions.get('window');
 
 const COLORS = {
-  background: '#0f231c',
-  primary: '#019863',
-  text: '#FFFFFF',
+  background: '#fff',
+  primary: '#1f1f1f',
+  text: '#1f1f1f',
   textSecondary: '#a9a9a9',
 };
 
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-    fontFamily: 'Manrope_400Regular',
+    fontFamily: 'Monteserrat-Regular',
   },
   skipButton: {
     alignSelf: 'flex-end',
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     color: COLORS.textSecondary,
-    fontFamily: 'Manrope_700Bold',
+    fontFamily: 'Monteserrat-Bold',
     fontSize: 16,
   },
   slide: {
@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   title: {
     color: COLORS.text,
     fontSize: 24,
-    fontFamily: 'Manrope_700Bold',
+    fontFamily: 'Monteserrat-Bold',
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     height: 8,
     width: 8,
     borderRadius: 4,
-    backgroundColor: '#334D46',
+    backgroundColor: '#989898ff',
     marginHorizontal: 4,
   },
   indicatorActive: {
@@ -155,12 +155,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   ctaButtonText: {
-    color: '#0f231c', // Background escuro para contraste
+    color: '#fff', // Background escuro para contraste
     fontSize: 16,
-    fontFamily: 'Manrope_700Bold',
+    fontFamily: 'Monteserrat-Bold',
   },
   loginText: {
-    color: COLORS.textSecondary,
+    color: COLORS.primary,
     textAlign: 'center',
     fontSize: 14,
   },

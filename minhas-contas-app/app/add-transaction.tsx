@@ -1,18 +1,20 @@
 import React, { useState, useEffect, ComponentProps } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
+import Constants from 'expo-constants';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Category } from '@/types/category';
 import { createTransaction } from '@/services/TransactionsService';
 
 const COLORS = {
-  background: '#101010',
+  background: '#fff',
   card: '#1E1E1E',
-  text: '#FFFFFF',
+  text: '#1f1f1f',
+  TextInput: '#f5f5f5',
   textSecondary: '#A9A9A9',
-  income: '#2ECC71',
-  expense: '#E74C3C',
-  primary: '#3498DB',
+  income: '#61c58bff',
+  expense: '#e56d5fff',
+  primary: 'black',
 };
 
 export default function AddTransactionModal() {
@@ -94,14 +96,14 @@ export default function AddTransactionModal() {
 
         <View style={styles.segmentControl}>
           <TouchableOpacity 
-            style={[styles.segmentButton, type === 'EXPENSE' && styles.segmentButtonActiveExpense]}
-            onPress={() => handleTypeChange('EXPENSE')}>
-            <Text style={[styles.segmentText, type === 'EXPENSE' && styles.segmentTextActive]}>Despesa</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.segmentButton, type === 'INCOME' && styles.segmentButtonActiveIncome]}
+            style={[styles.segmentButtonIncome, type === 'INCOME' && styles.segmentButtonActiveIncome]}
             onPress={() => handleTypeChange('INCOME')}>
             <Text style={[styles.segmentText, type === 'INCOME' && styles.segmentTextActive]}>Receita</Text>
+          </TouchableOpacity>          
+          <TouchableOpacity 
+            style={[styles.segmentButtonExpense, type === 'EXPENSE' && styles.segmentButtonActiveExpense]}
+            onPress={() => handleTypeChange('EXPENSE')}>
+            <Text style={[styles.segmentText, type === 'EXPENSE' && styles.segmentTextActive]}>Despesa</Text>
           </TouchableOpacity>
         </View>
 
@@ -160,27 +162,44 @@ export default function AddTransactionModal() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: COLORS.background },
+    container: { flex: 1, backgroundColor: COLORS.background, paddingTop: Constants.statusBarHeight, },
     content: { padding: 20, flexGrow: 1 },
     header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
-    headerTitle: { color: COLORS.text, fontSize: 20, fontFamily: 'Manrope-Bold' },
-    segmentControl: { flexDirection: 'row', backgroundColor: COLORS.card, borderRadius: 12, marginBottom: 24 },
-    segmentButton: { flex: 1, padding: 14, borderRadius: 12, alignItems: 'center' },
+    headerTitle: { color: COLORS.text, fontSize: 20, fontFamily: 'Montserrat-Bold' },
+    segmentControl: { flexDirection: 'row', backgroundColor: COLORS.card, borderRadius: 8, marginBottom: 24 },
+    segmentButtonExpense: { 
+      flex: 1, 
+      padding: 14,   
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 8,
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 8, 
+      alignItems: 'center' 
+},
+    segmentButtonIncome: { 
+      flex: 1, 
+      padding: 14,   
+      borderBottomLeftRadius: 8,
+      borderBottomRightRadius: 0,
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 0, 
+      alignItems: 'center' 
+},
     segmentButtonActiveExpense: { backgroundColor: COLORS.expense },
     segmentButtonActiveIncome: { backgroundColor: COLORS.income },
-    segmentText: { color: COLORS.textSecondary, fontFamily: 'Manrope-Bold' },
+    segmentText: { color: COLORS.textSecondary, fontFamily: 'Montserrat-Bold' },
     segmentTextActive: { color: COLORS.text },
     amountContainer: { alignItems: 'center', marginBottom: 24 },
-    currencySymbol: { color: COLORS.text, fontSize: 24, fontFamily: 'Manrope-Regular' },
-    amountInput: { color: COLORS.text, fontSize: 64, fontFamily: 'Manrope-Bold', textAlign: 'center', width: '100%' },
-    input: { backgroundColor: COLORS.card, color: COLORS.text, padding: 16, borderRadius: 12, marginBottom: 16, fontSize: 16, fontFamily: 'Manrope-Regular' },
-    selectorButton: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.card, padding: 16, borderRadius: 12, marginBottom: 16 },
-    selectorText: { color: COLORS.text, fontSize: 16, fontFamily: 'Manrope-Regular' },
-    selectorTextPlaceholder: { color: COLORS.textSecondary, fontSize: 16, fontFamily: 'Manrope-Regular' },
+    currencySymbol: { color: COLORS.text, fontSize: 24, fontFamily: 'Montserrat-Regular' },
+    amountInput: { color: COLORS.text, fontSize: 64, fontFamily: 'Montserrat-Bold', textAlign: 'center', width: '100%' },
+    input: { backgroundColor: COLORS.card, color: COLORS.TextInput, padding: 16, borderRadius: 8, marginBottom: 16, fontSize: 16, fontFamily: 'Montserrat-Regular' },
+    selectorButton: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.card, padding: 16, borderRadius: 8, marginBottom: 16 },
+    selectorText: { color: COLORS.text, fontSize: 16, fontFamily: 'Montserrat-Regular' },
+    selectorTextPlaceholder: { color: COLORS.textSecondary, fontSize: 16, fontFamily: 'Montserrat-Regular' },
     categorySelected: { flexDirection: 'row', alignItems: 'center' },
     iconContainer: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-    footer: { padding: 20, borderTopWidth: 1, borderTopColor: COLORS.card },
-    saveButton: { backgroundColor: COLORS.primary, padding: 16, borderRadius: 12, alignItems: 'center' },
-    saveButtonDisabled: { backgroundColor: '#3498DB80' },
-    saveButtonText: { color: COLORS.background, fontSize: 16, fontFamily: 'Manrope-Bold' },
+    footer: { padding: 20},
+    saveButton: { backgroundColor: COLORS.primary, padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 20 },
+    saveButtonDisabled: { backgroundColor: 'gray', padding: 16, borderRadius: 8, alignItems: 'center' },
+    saveButtonText: { color: COLORS.background, fontSize: 18, fontFamily: 'Montserrat-Bold' },
 });

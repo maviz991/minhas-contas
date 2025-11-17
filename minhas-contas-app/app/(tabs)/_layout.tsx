@@ -4,8 +4,8 @@ import { Tabs, useRouter } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
 const COLORS = {
-  backgroundDark: '#1C2C22',
-  primary: '#13ec5b',
+  backgroundDark: '#fff',
+  primary: '#111b21',
   inactive: '#9db9a6',
 };
 
