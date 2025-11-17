@@ -5,7 +5,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 const COLORS = {
   backgroundDark: '#fff',
-  primary: '#111b21',
+  primary: '#1E1E1E',
   inactive: '#9db9a6',
 };
 

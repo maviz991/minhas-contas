@@ -60,7 +60,7 @@ export default function RootLayout() {
           name="add-account"
           options={{
             presentation: 'modal',
-            title: 'Nova Conta2'
+            title: 'Nova Conta'
           }}
         />
         <Stack.Screen
