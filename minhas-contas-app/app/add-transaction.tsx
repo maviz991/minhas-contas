@@ -86,13 +86,6 @@ export default function AddTransactionModal() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
-                <FontAwesome name="arrow-left" size={24} color={COLORS.text} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Nova Transação</Text>
-            <View style={{width: 24}} />
-        </View>
 
         <View style={styles.segmentControl}>
           <TouchableOpacity 

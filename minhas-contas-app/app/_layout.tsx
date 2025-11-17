@@ -59,14 +59,12 @@ export default function RootLayout() {
         <Stack.Screen
           name="add-account"
           options={{
-            presentation: 'modal',
             title: 'Nova Conta'
           }}
         />
         <Stack.Screen
           name="add-transaction"
           options={{
-            presentation: 'modal',
             title: 'Nova Transação'
           }}
         />

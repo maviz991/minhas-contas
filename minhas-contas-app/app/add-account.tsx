@@ -38,7 +38,6 @@ export default function AddAccountScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{isEditing ? 'Editar Conta' : 'Adicionar Nova Conta'}</Text>
       <TextInput
         style={styles.input}
         placeholder="Nome da Conta"

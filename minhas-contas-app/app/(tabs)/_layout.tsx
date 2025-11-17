@@ -44,7 +44,6 @@ export default function TabLayout() {
           height: 60,
           paddingBottom: 5,
         },
-        headerShown: false, 
       }}
     >
       <Tabs.Screen
@@ -82,7 +81,6 @@ export default function TabLayout() {
         name="accounts"
         options={{
           title: 'Contas',
-          headerShown: true,
           tabBarIcon: ({ color }) => <FontAwesome size={24} name="bank" color={color} />,
           headerRight: () => (
             <Link href="/add-account" asChild>
