@@ -60,10 +60,16 @@ export default function RootLayout() {
           name="add-account"
           options={{
             presentation: 'modal',
-            title: 'Nova Conta'
+            title: 'Nova Conta2'
           }}
         />
-        <Stack.Screen name="add-transaction" options={{ headerShown: false, presentation: 'modal' }} />
+        <Stack.Screen
+          name="add-transaction"
+          options={{
+            presentation: 'modal',
+            title: 'Nova Transação'
+          }}
+        />
         <Stack.Screen name="select-category" options={{ presentation: 'modal', headerShown: false }} />
       </Stack>
       <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />

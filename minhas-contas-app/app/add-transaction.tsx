@@ -86,13 +86,6 @@ export default function AddTransactionModal() {
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.header}>
-            <TouchableOpacity onPress={() => router.back()}>
-                <FontAwesome name="arrow-left" size={24} color={COLORS.text} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Nova Transação</Text>
-            <View style={{width: 24}} />
-        </View>
 
         <View style={styles.segmentControl}>
           <TouchableOpacity 
@@ -164,17 +157,15 @@ export default function AddTransactionModal() {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: COLORS.background, paddingTop: Constants.statusBarHeight, },
     content: { padding: 20, flexGrow: 1 },
-    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
-    headerTitle: { color: COLORS.text, fontSize: 20, fontFamily: 'Montserrat-Bold' },
     segmentControl: { flexDirection: 'row', backgroundColor: COLORS.card, borderRadius: 8, marginBottom: 24 },
-    segmentButtonExpense: { 
-      flex: 1, 
-      padding: 14,   
+    segmentButtonExpense: {
+      flex: 1,
+      padding: 14,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 8,
       borderTopLeftRadius: 0,
-      borderTopRightRadius: 8, 
-      alignItems: 'center' 
+      borderTopRightRadius: 8,
+      alignItems: 'center'
 },
     segmentButtonIncome: { 
       flex: 1, 

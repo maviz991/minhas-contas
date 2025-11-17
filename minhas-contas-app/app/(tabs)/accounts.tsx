@@ -85,16 +85,6 @@ export default function AccountsScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ padding: 16 }}
-        ListHeaderComponent={
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Minhas Contas</Text>
-            <Link href="/add-account" asChild>
-              <TouchableOpacity style={styles.addButton}>
-                <Ionicons name="add-circle-outline" size={30} color="#007AFF" />
-              </TouchableOpacity>
-            </Link>
-          </View>
-        }
       />
     </View>
   );
@@ -103,20 +93,6 @@ export default function AccountsScreen() {
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   container: { flex: 1, backgroundColor: '#f0f0f0' },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 8,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  addButton: {
-    padding: 5,
-  },
   errorText: { color: 'red', textAlign: 'center', marginTop: 20 },
   itemContainer: {
     backgroundColor: '#fff',
