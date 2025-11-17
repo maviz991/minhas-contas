@@ -87,12 +87,7 @@ export default function AccountsScreen() {
         contentContainerStyle={{ padding: 16 }}
         ListHeaderComponent={
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Minhas Contas</Text>
-            <Link href="/add-account" asChild>
-              <TouchableOpacity style={styles.addButton}>
-                <Ionicons name="add-circle-outline" size={30} color="#007AFF" />
-              </TouchableOpacity>
-            </Link>
+            {/* O título e o botão de adicionar contas serão gerenciados pelo cabeçalho da Stack */}
           </View>
         }
       />

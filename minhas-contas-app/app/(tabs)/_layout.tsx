@@ -1,7 +1,7 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Tabs, useRouter } from 'expo-router';
-import { FontAwesome } from '@expo/vector-icons';
+import { View, TouchableOpacity } from 'react-native';
+import { Tabs, useRouter, Link } from 'expo-router';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 const COLORS = {
   backgroundDark: '#fff',
@@ -82,7 +82,15 @@ export default function TabLayout() {
         name="accounts"
         options={{
           title: 'Contas',
+          headerShown: true,
           tabBarIcon: ({ color }) => <FontAwesome size={24} name="bank" color={color} />,
+          headerRight: () => (
+            <Link href="/add-account" asChild>
+              <TouchableOpacity style={{ marginRight: 15 }}>
+                <Ionicons name="add-circle-outline" size={30} color={COLORS.backgroundDark} />
+              </TouchableOpacity>
+            </Link>
+          ),
         }}
       />
 
