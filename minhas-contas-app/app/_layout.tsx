@@ -53,8 +53,15 @@ export default function RootLayout() {
           name="add-bill" 
           options={{ 
             presentation: 'modal', 
-            title: 'Nova Fatura' 
-          }} 
+            title: 'Nova Fatura'
+          }}
+        />
+        <Stack.Screen
+          name="add-account"
+          options={{
+            presentation: 'modal',
+            title: 'Nova Conta'
+          }}
         />
         <Stack.Screen name="add-transaction" options={{ headerShown: false, presentation: 'modal' }} />
         <Stack.Screen name="select-category" options={{ presentation: 'modal', headerShown: false }} />

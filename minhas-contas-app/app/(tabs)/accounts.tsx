@@ -1,8 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-import { useFocusEffect } from 'expo-router';
-import { getAccounts } from '../../services/AccountsService';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity, Alert } from 'react-native';
+import { useFocusEffect, Link } from 'expo-router';
+import { getAccounts, deleteAccount } from '../../services/AccountsService';
 import { Account } from '../../types/account';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AccountsScreen() {
   const [accounts, setAccounts] = useState<Account[]>([]);
@@ -28,13 +29,45 @@ export default function AccountsScreen() {
     }, [])
   );
 
+  const handleDeleteAccount = async (id: number) => {
+    Alert.alert(
+      "Excluir Conta",
+      "Tem certeza que deseja excluir esta conta? Todas as transações associadas serão perdidas.",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel"
+        },
+        {
+          text: "Excluir",
+          onPress: async () => {
+            try {
+              await deleteAccount(id);
+              fetchAccounts(); // Recarrega a lista de contas
+            } catch (err) {
+              Alert.alert("Erro", "Não foi possível excluir a conta.");
+            }
+          },
+          style: "destructive"
+        }
+      ]
+    );
+  };
+
   const renderItem = ({ item }: { item: Account }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemNome}>{item.name}</Text>
-      <Text style={styles.itemSaldo}>
-        R$ {item.balance.toFixed(2).replace('.', ',')}
-      </Text>
-    </View>
+    <Link href={{ pathname: "/add-account", params: { id: item.id, name: item.name, balance: item.balance } }} asChild>
+      <TouchableOpacity style={styles.itemContainer}>
+        <View>
+          <Text style={styles.itemNome}>{item.name}</Text>
+          <Text style={styles.itemSaldo}>
+            R$ {item.balance.toFixed(2).replace('.', ',')}
+          </Text>
+        </View>
+        <TouchableOpacity onPress={() => handleDeleteAccount(item.id)} style={styles.deleteButton}>
+          <Ionicons name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 
   if (loading) {
@@ -52,7 +85,16 @@ export default function AccountsScreen() {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ padding: 16 }}
-        ListHeaderComponent={<Text style={styles.headerTitle}>Minhas Contas</Text>}
+        ListHeaderComponent={
+          <View style={styles.header}>
+            <Text style={styles.headerTitle}>Minhas Contas</Text>
+            <Link href="/add-account" asChild>
+              <TouchableOpacity style={styles.addButton}>
+                <Ionicons name="add-circle-outline" size={30} color="#007AFF" />
+              </TouchableOpacity>
+            </Link>
+          </View>
+        }
       />
     </View>
   );
@@ -61,11 +103,19 @@ export default function AccountsScreen() {
 const styles = StyleSheet.create({
   centered: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   container: { flex: 1, backgroundColor: '#f0f0f0' },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingHorizontal: 8,
+  },
   headerTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
-    paddingHorizontal: 8,
+  },
+  addButton: {
+    padding: 5,
   },
   errorText: { color: 'red', textAlign: 'center', marginTop: 20 },
   itemContainer: {
@@ -89,5 +139,8 @@ const styles = StyleSheet.create({
   itemSaldo: {
     fontSize: 18,
     color: 'green',
+  },
+  deleteButton: {
+    padding: 8,
   },
 });
