@@ -35,9 +35,8 @@ export default function AddTransactionModal() {
   const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
   const [isAccountModalVisible, setAccountModalVisible] = useState(false);
 
-  // --- LÓGICA NOVA: Recuperar dados ao voltar da seleção de categoria ---
+  // --- Recuperar dados ao voltar da seleção de categoria ---
   useEffect(() => {
-    // 1. Recupera a Categoria
     if (params.selectedCategoryId) {
       setSelectedCategory({
         id: parseInt(params.selectedCategoryId as string),
@@ -48,30 +47,24 @@ export default function AddTransactionModal() {
       });
     }
 
-    // 2. Recupera os campos de texto (se voltarem preenchidos)
     if (params.restoredAmount) setAmount(params.restoredAmount as string);
     if (params.restoredDescription) setDescription(params.restoredDescription as string);
-    
-    // 3. Recupera o Tipo
     if (params.type) setType(params.type as 'EXPENSE' | 'INCOME');
 
   }, [params.selectedCategoryId, params.restoredAmount, params.restoredDescription, params.type]);
-  // ---------------------------------------------------------------------
 
-  // Carregar Contas e recuperar conta selecionada se houver
+  // Carregar Contas
   useEffect(() => {
     const loadData = async () => {
         try {
             const data = await getAccounts();
             setAccounts(data);
             
-            // Se voltou da tela de categoria com um ID de conta, tenta selecionar ele
             if (params.restoredAccountId) {
                 const restored = data.find(a => a.id.toString() === params.restoredAccountId);
                 if (restored) setSelectedAccount(restored);
                 else if (data.length > 0) setSelectedAccount(data[0]);
             } 
-            // Se não, seleciona o primeiro padrão (apenas se ainda não tiver selecionado)
             else if (data.length > 0 && !selectedAccount) {
                 setSelectedAccount(data[0]);
             }
@@ -80,10 +73,9 @@ export default function AddTransactionModal() {
         }
     };
     loadData();
-  }, [params.restoredAccountId]); // Adicionado dependência para garantir seleção correta
+  }, [params.restoredAccountId]); 
 
   const handleSelectCategory = () => {
-    // --- MUDANÇA AQUI: Envia o estado atual para a outra tela não perder nada ---
     router.push({
         pathname: '/select-category',
         params: {
@@ -101,7 +93,6 @@ export default function AddTransactionModal() {
   };
 
   const handleSave = async () => {
-    // Verifica explicitamente se category é null
     if (!amount || !description || !selectedCategory || !selectedAccount) {
       Alert.alert('Campos Incompletos', `Preencha: \n${!amount ? '- Valor\n' : ''}${!description ? '- Descrição\n' : ''}${!selectedCategory ? '- Categoria\n' : ''}`);
       return;
@@ -123,15 +114,18 @@ export default function AddTransactionModal() {
         accountId: selectedAccount.id,
         categoryId: selectedCategory.id,
       });
-      router.back();
+
+      // --- CORREÇÃO FINAL AQUI ---
+      // Usamos replace('/') para garantir que ele volte para a raiz do app (Home),
+      // ignorando se havia telas de categoria abertas no histórico.
+      router.replace('/'); 
+
     } catch (error) {
       Alert.alert('Erro', 'Falha ao salvar transação.');
     } finally {
       setIsLoading(false);
     }
   };
-
-  // ... (O resto do código de renderização, Modal e Styles permanece igual ao anterior) ...
   
   const renderAccountItem = ({ item }: { item: Account }) => (
     <TouchableOpacity 
