@@ -6,29 +6,9 @@ import { FontAwesome, Ionicons } from '@expo/vector-icons';
 const COLORS = {
   backgroundDark: '#fff',
   primary: '#111b21',
-  inactive: '#9db9a6',
+  inactive: '#808080ff',
 };
 
-const AddButtonIcon = () => (
-  <View
-    style={{
-      backgroundColor: COLORS.primary,
-      width: 64,
-      height: 64,
-      borderRadius: 32,
-      justifyContent: 'center',
-      alignItems: 'center',
-      transform: [{ translateY: -20 }],
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-      elevation: 8,
-    }}
-  >
-    <FontAwesome name="plus" size={28} color={COLORS.backgroundDark} />
-  </View>
-);
 
 export default function TabLayout() {
   const router = useRouter();
@@ -49,7 +29,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Painel',
+          title: 'Home',
           tabBarIcon: ({ color }) => <FontAwesome size={26} name="home" color={color} />,
         }}
       />
@@ -63,15 +43,14 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="add-placeholder"
-        options={{
-          title: '',
-          tabBarIcon: () => <AddButtonIcon />,
+        name="add-transaction"
+          options={{
+          title: 'Transação',
+          tabBarIcon: ({ color }) => <FontAwesome size={24} name="list-alt" color={color} />, 
         }}
         listeners={{
           tabPress: (e) => {
             e.preventDefault();
-            // AQUI ESTÁ A MUDANÇA
             router.push('/add-transaction'); 
           },
         }}
