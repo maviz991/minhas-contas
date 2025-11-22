@@ -10,13 +10,13 @@ import { getAccounts } from '@/services/AccountsService';
 
 const COLORS = {
   background: '#fff',
-  card: '#1E1E1E',
-  text: '#1f1f1f',
+  card: '#1f1f1f',
+  text: '#fff',
   TextInput: '#f5f5f5',
   textSecondary: '#A9A9A9',
   income: '#61c58bff',
   expense: '#e56d5fff',
-  primary: 'black',
+  primary: '#1f1f1f',
   overlay: 'rgba(0,0,0,0.5)',
 };
 
@@ -185,8 +185,8 @@ export default function AddTransactionModal() {
         <TouchableOpacity style={styles.selectorButton} onPress={handleSelectCategory}>
             {selectedCategory ? (
             <View style={styles.categorySelected}>
-                <View style={[styles.iconContainer, { backgroundColor: selectedCategory.color + '20' }]}>
-                <FontAwesome name={selectedCategory.icon} size={18} color={selectedCategory.color} />
+                <View style={[styles.iconContainer, { backgroundColor: '#ffffff' }]}>
+                   <FontAwesome name={selectedCategory.icon} size={18} color={selectedCategory.color} />
                 </View>
                 <Text style={styles.selectorText}>{selectedCategory.name}</Text>
             </View>
@@ -239,24 +239,34 @@ const styles = StyleSheet.create({
     segmentText: { color: COLORS.textSecondary, fontFamily: 'Montserrat-Bold' },
     segmentTextActive: { color: COLORS.text },
     amountContainer: { alignItems: 'center', marginBottom: 24 },
-    currencySymbol: { color: COLORS.text, fontSize: 24, fontFamily: 'Montserrat-Regular' },
-    amountInput: { color: COLORS.text, fontSize: 64, fontFamily: 'Montserrat-Bold', textAlign: 'center', width: '100%' },
+    currencySymbol: { color: COLORS.textSecondary, fontSize: 24, fontFamily: 'Montserrat-Regular' },
+    amountInput: { color: COLORS.primary, fontSize: 64, fontFamily: 'Montserrat-Bold', textAlign: 'center', width: '100%' },
     input: { backgroundColor: COLORS.card, color: COLORS.TextInput, padding: 16, borderRadius: 8, marginBottom: 16, fontSize: 16, fontFamily: 'Montserrat-Regular' },
     selectorButton: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: COLORS.card, padding: 16, borderRadius: 8, marginBottom: 16 },
     selectorText: { color: COLORS.text, fontSize: 16, fontFamily: 'Montserrat-Regular' },
     selectorTextPlaceholder: { color: COLORS.textSecondary, fontSize: 16, fontFamily: 'Montserrat-Regular' },
-    categorySelected: { flexDirection: 'row', alignItems: 'center' },
-    iconContainer: { width: 32, height: 32, borderRadius: 16, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+     iconContainer: { 
+      width: 32, 
+      height: 32, 
+      borderRadius: 50, 
+      justifyContent: 'center', 
+      alignItems: 'center', 
+      marginRight: 12 
+    },
+    categorySelected: { 
+      flexDirection: 'row', 
+      alignItems: 'center' 
+    },
     footer: { padding: 20},
     saveButton: { backgroundColor: COLORS.primary, padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 20 },
     saveButtonDisabled: { backgroundColor: 'gray', padding: 16, borderRadius: 8, alignItems: 'center' },
     saveButtonText: { color: COLORS.background, fontSize: 18, fontFamily: 'Montserrat-Bold' },
     modalOverlay: { flex: 1, backgroundColor: COLORS.overlay, justifyContent: 'center', alignItems: 'center', padding: 20 },
     modalContent: { backgroundColor: COLORS.background, borderRadius: 16, padding: 20, width: '100%', maxWidth: 400 },
-    modalTitle: { fontSize: 18, fontFamily: 'Montserrat-Bold', marginBottom: 16, textAlign: 'center', color: COLORS.text },
+    modalTitle: { fontSize: 18, fontFamily: 'Montserrat-Bold', marginBottom: 16, textAlign: 'center', color: COLORS.primary },
     modalItem: { paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#f0f0f0', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-    modalItemText: { fontSize: 16, fontFamily: 'Montserrat-Regular', color: COLORS.text },
+    modalItemText: { fontSize: 16, fontFamily: 'Montserrat-Regular', color: COLORS.textSecondary },
     modalItemTextSelected: { fontFamily: 'Montserrat-Bold', color: COLORS.primary },
     modalCloseButton: { marginTop: 16, padding: 12, alignItems: 'center' },
-    modalCloseButtonText: { color: COLORS.textSecondary, fontFamily: 'Montserrat-Bold' }
+    modalCloseButtonText: { color: COLORS.primary, fontFamily: 'Montserrat-Bold' }
 });

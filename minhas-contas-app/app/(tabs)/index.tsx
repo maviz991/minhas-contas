@@ -28,7 +28,7 @@ type Transacao = {
 const transacoesRecentes: Transacao[] = [
     { id: 1, icon: 'shopping-cart', nome: 'Supermercado do Mês', valor: -450.30, data: 'Hoje' },
     { id: 2, icon: 'money', nome: 'Salário', valor: 5000.00, data: 'Ontem' },
-    { id: 3, icon: 'bolt', nome: 'Conta de Luz', valor: -180.55, data: '25 de Out' },
+    { id: 3, icon: 'bus', nome: 'Conta de Luz', valor: -180.55, data: '25 de Out' },
 ];
 
 export default function DashboardScreen() {
