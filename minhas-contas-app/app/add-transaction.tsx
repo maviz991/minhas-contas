@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ComponentProps } from 'react';
+// Removido o import do Constants pois não é mais necessário para o padding
 import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
-import Constants from 'expo-constants';
+// import Constants from 'expo-constants'; <--- REMOVER ESTA LINHA
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Category } from '@/types/category';
@@ -59,21 +60,18 @@ export default function AddTransactionModal() {
       return;
     }
 
-    // Para simplificar, estamos hardcoding a conta e a data.
-    // Em uma versão futura, teríamos seletores para ambos.
     const transactionData = {
       description,
       amount: valorNumerico,
       date: new Date().toISOString(),
       type,
-      accountId: 1, // ATENÇÃO: Garanta que uma conta com id=1 exista!
+      accountId: 1, 
       categoryId: selectedCategory.id,
     };
 
     setIsLoading(true);
     try {
       await createTransaction(transactionData);
-      // O useFocusEffect no dashboard irá recarregar a lista.
       router.back();
     } catch (error) {
       console.error('Falha ao salvar transação:', error);
@@ -155,7 +153,8 @@ export default function AddTransactionModal() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: COLORS.background, paddingTop: Constants.statusBarHeight, },
+    // REMOVIDO: paddingTop: Constants.statusBarHeight
+    container: { flex: 1, backgroundColor: COLORS.background }, 
     content: { padding: 20, flexGrow: 1 },
     header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
     headerTitle: { color: COLORS.text, fontSize: 20, fontFamily: 'Montserrat-Bold' },
