@@ -1,11 +1,12 @@
 import React, { useState, useEffect, ComponentProps } from 'react';
-// Removido o import do Constants pois não é mais necessário para o padding
-import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Platform } from 'react-native';
-// import Constants from 'expo-constants'; <--- REMOVER ESTA LINHA
+import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert, Modal, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { Category } from '@/types/category';
+import { Account } from '@/types/account';
 import { createTransaction } from '@/services/TransactionsService';
+import { getAccounts } from '@/services/AccountsService';
 
 const COLORS = {
   background: '#fff',
@@ -16,31 +17,82 @@ const COLORS = {
   income: '#61c58bff',
   expense: '#e56d5fff',
   primary: 'black',
+  overlay: 'rgba(0,0,0,0.5)',
 };
 
 export default function AddTransactionModal() {
   const router = useRouter();
   const params = useLocalSearchParams();
+
   const [type, setType] = useState<'EXPENSE' | 'INCOME'>('EXPENSE');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  
+  // Contas
+  const [accounts, setAccounts] = useState<Account[]>([]);
+  const [selectedAccount, setSelectedAccount] = useState<Account | null>(null);
+  const [isAccountModalVisible, setAccountModalVisible] = useState(false);
 
+  // --- LÓGICA NOVA: Recuperar dados ao voltar da seleção de categoria ---
   useEffect(() => {
+    // 1. Recupera a Categoria
     if (params.selectedCategoryId) {
       setSelectedCategory({
         id: parseInt(params.selectedCategoryId as string),
         name: params.selectedCategoryName as string,
         icon: params.selectedCategoryIcon as ComponentProps<typeof FontAwesome>['name'],
         color: params.selectedCategoryColor as string,
-        type: type,
+        type: params.type as 'EXPENSE' | 'INCOME' || type,
       });
     }
-  }, [params.selectedCategoryId]);
+
+    // 2. Recupera os campos de texto (se voltarem preenchidos)
+    if (params.restoredAmount) setAmount(params.restoredAmount as string);
+    if (params.restoredDescription) setDescription(params.restoredDescription as string);
+    
+    // 3. Recupera o Tipo
+    if (params.type) setType(params.type as 'EXPENSE' | 'INCOME');
+
+  }, [params.selectedCategoryId, params.restoredAmount, params.restoredDescription, params.type]);
+  // ---------------------------------------------------------------------
+
+  // Carregar Contas e recuperar conta selecionada se houver
+  useEffect(() => {
+    const loadData = async () => {
+        try {
+            const data = await getAccounts();
+            setAccounts(data);
+            
+            // Se voltou da tela de categoria com um ID de conta, tenta selecionar ele
+            if (params.restoredAccountId) {
+                const restored = data.find(a => a.id.toString() === params.restoredAccountId);
+                if (restored) setSelectedAccount(restored);
+                else if (data.length > 0) setSelectedAccount(data[0]);
+            } 
+            // Se não, seleciona o primeiro padrão (apenas se ainda não tiver selecionado)
+            else if (data.length > 0 && !selectedAccount) {
+                setSelectedAccount(data[0]);
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    };
+    loadData();
+  }, [params.restoredAccountId]); // Adicionado dependência para garantir seleção correta
 
   const handleSelectCategory = () => {
-    router.push(`/select-category?type=${type}`);
+    // --- MUDANÇA AQUI: Envia o estado atual para a outra tela não perder nada ---
+    router.push({
+        pathname: '/select-category',
+        params: {
+            type: type,
+            currentAmount: amount,
+            currentDescription: description,
+            currentAccountId: selectedAccount ? selectedAccount.id.toString() : ''
+        }
+    });
   };
 
   const handleTypeChange = (newType: 'EXPENSE' | 'INCOME') => {
@@ -49,42 +101,57 @@ export default function AddTransactionModal() {
   };
 
   const handleSave = async () => {
-    if (!amount || !description || !selectedCategory) {
-      Alert.alert('Campos Incompletos', 'Por favor, preencha o valor, a descrição e selecione uma categoria.');
+    // Verifica explicitamente se category é null
+    if (!amount || !description || !selectedCategory || !selectedAccount) {
+      Alert.alert('Campos Incompletos', `Preencha: \n${!amount ? '- Valor\n' : ''}${!description ? '- Descrição\n' : ''}${!selectedCategory ? '- Categoria\n' : ''}`);
       return;
     }
 
     const valorNumerico = parseFloat(amount.replace(',', '.'));
     if (isNaN(valorNumerico) || valorNumerico <= 0) {
-      Alert.alert('Valor Inválido', 'Por favor, insira um valor numérico maior que zero.');
+      Alert.alert('Valor Inválido', 'Insira um valor maior que zero.');
       return;
     }
 
-    const transactionData = {
-      description,
-      amount: valorNumerico,
-      date: new Date().toISOString(),
-      type,
-      accountId: 1, 
-      categoryId: selectedCategory.id,
-    };
-
     setIsLoading(true);
     try {
-      await createTransaction(transactionData);
+      await createTransaction({
+        description,
+        amount: valorNumerico,
+        date: new Date().toISOString(),
+        type,
+        accountId: selectedAccount.id,
+        categoryId: selectedCategory.id,
+      });
       router.back();
     } catch (error) {
-      console.error('Falha ao salvar transação:', error);
-      Alert.alert('Erro', 'Não foi possível salvar a transação. Verifique o console do backend para mais detalhes.');
+      Alert.alert('Erro', 'Falha ao salvar transação.');
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.content}>
+  // ... (O resto do código de renderização, Modal e Styles permanece igual ao anterior) ...
+  
+  const renderAccountItem = ({ item }: { item: Account }) => (
+    <TouchableOpacity 
+      style={styles.modalItem} 
+      onPress={() => {
+        setSelectedAccount(item);
+        setAccountModalVisible(false);
+      }}
+    >
+      <Text style={[styles.modalItemText, selectedAccount?.id === item.id && styles.modalItemTextSelected]}>
+        {item.name}
+      </Text>
+      {selectedAccount?.id === item.id && <FontAwesome name="check" size={16} color={COLORS.primary} />}
+    </TouchableOpacity>
+  );
 
+  return (
+    <SafeAreaView style={styles.container} edges={['bottom', 'left', 'right']}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* SELETOR DE TIPO */}
         <View style={styles.segmentControl}>
           <TouchableOpacity 
             style={[styles.segmentButtonIncome, type === 'INCOME' && styles.segmentButtonActiveIncome]}
@@ -98,6 +165,7 @@ export default function AddTransactionModal() {
           </TouchableOpacity>
         </View>
 
+        {/* INPUT VALOR */}
         <View style={styles.amountContainer}>
           <Text style={styles.currencySymbol}>R$</Text>
           <TextInput
@@ -110,6 +178,7 @@ export default function AddTransactionModal() {
           />
         </View>
 
+        {/* INPUT DESCRIÇÃO */}
         <TextInput
             style={styles.input}
             placeholder="Descrição"
@@ -118,6 +187,7 @@ export default function AddTransactionModal() {
             onChangeText={setDescription}
         />
 
+        {/* BOTÃO CATEGORIA */}
         <TouchableOpacity style={styles.selectorButton} onPress={handleSelectCategory}>
             {selectedCategory ? (
             <View style={styles.categorySelected}>
@@ -132,51 +202,44 @@ export default function AddTransactionModal() {
             <FontAwesome name="chevron-down" size={16} color={COLORS.textSecondary} />
         </TouchableOpacity>
 
-         <TouchableOpacity style={styles.selectorButton}>
-            <Text style={styles.selectorTextPlaceholder}>Conta (Padrão)</Text>
+         {/* BOTÃO CONTA */}
+         <TouchableOpacity style={styles.selectorButton} onPress={() => setAccountModalVisible(true)}>
+            {selectedAccount ? (
+               <Text style={styles.selectorText}>{selectedAccount.name}</Text>
+            ) : (
+               <Text style={styles.selectorTextPlaceholder}>Selecionar Conta</Text>
+            )}
             <FontAwesome name="chevron-down" size={16} color={COLORS.textSecondary} />
         </TouchableOpacity>
-
       </ScrollView>
 
       <View style={styles.footer}>
-        <TouchableOpacity 
-          style={[styles.saveButton, isLoading && styles.saveButtonDisabled]} 
-          onPress={handleSave}
-          disabled={isLoading}
-        >
+        <TouchableOpacity style={[styles.saveButton, isLoading && styles.saveButtonDisabled]} onPress={handleSave} disabled={isLoading}>
             <Text style={styles.saveButtonText}>{isLoading ? 'Salvando...' : 'Salvar Transação'}</Text>
         </TouchableOpacity>
       </View>
-    </View>
+
+      <Modal visible={isAccountModalVisible} transparent={true} animationType="fade" onRequestClose={() => setAccountModalVisible(false)}>
+        <TouchableOpacity style={styles.modalOverlay} activeOpacity={1} onPress={() => setAccountModalVisible(false)}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Selecione a Conta</Text>
+            <FlatList data={accounts} keyExtractor={(item) => item.id.toString()} renderItem={renderAccountItem} style={{ maxHeight: 300 }} />
+            <TouchableOpacity style={styles.modalCloseButton} onPress={() => setAccountModalVisible(false)}>
+               <Text style={styles.modalCloseButtonText}>Cancelar</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-    // REMOVIDO: paddingTop: Constants.statusBarHeight
     container: { flex: 1, backgroundColor: COLORS.background }, 
     content: { padding: 20, flexGrow: 1 },
-    header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
-    headerTitle: { color: COLORS.text, fontSize: 20, fontFamily: 'Montserrat-Bold' },
     segmentControl: { flexDirection: 'row', backgroundColor: COLORS.card, borderRadius: 8, marginBottom: 24 },
-    segmentButtonExpense: { 
-      flex: 1, 
-      padding: 14,   
-      borderBottomLeftRadius: 0,
-      borderBottomRightRadius: 8,
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 8, 
-      alignItems: 'center' 
-},
-    segmentButtonIncome: { 
-      flex: 1, 
-      padding: 14,   
-      borderBottomLeftRadius: 8,
-      borderBottomRightRadius: 0,
-      borderTopLeftRadius: 8,
-      borderTopRightRadius: 0, 
-      alignItems: 'center' 
-},
+    segmentButtonExpense: { flex: 1, padding: 14, borderTopRightRadius: 8, borderBottomRightRadius: 8, alignItems: 'center' },
+    segmentButtonIncome: { flex: 1, padding: 14, borderTopLeftRadius: 8, borderBottomLeftRadius: 8, alignItems: 'center' },
     segmentButtonActiveExpense: { backgroundColor: COLORS.expense },
     segmentButtonActiveIncome: { backgroundColor: COLORS.income },
     segmentText: { color: COLORS.textSecondary, fontFamily: 'Montserrat-Bold' },
@@ -194,4 +257,12 @@ const styles = StyleSheet.create({
     saveButton: { backgroundColor: COLORS.primary, padding: 16, borderRadius: 8, alignItems: 'center', marginBottom: 20 },
     saveButtonDisabled: { backgroundColor: 'gray', padding: 16, borderRadius: 8, alignItems: 'center' },
     saveButtonText: { color: COLORS.background, fontSize: 18, fontFamily: 'Montserrat-Bold' },
+    modalOverlay: { flex: 1, backgroundColor: COLORS.overlay, justifyContent: 'center', alignItems: 'center', padding: 20 },
+    modalContent: { backgroundColor: COLORS.background, borderRadius: 16, padding: 20, width: '100%', maxWidth: 400 },
+    modalTitle: { fontSize: 18, fontFamily: 'Montserrat-Bold', marginBottom: 16, textAlign: 'center', color: COLORS.text },
+    modalItem: { paddingVertical: 16, borderBottomWidth: 1, borderBottomColor: '#f0f0f0', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+    modalItemText: { fontSize: 16, fontFamily: 'Montserrat-Regular', color: COLORS.text },
+    modalItemTextSelected: { fontFamily: 'Montserrat-Bold', color: COLORS.primary },
+    modalCloseButton: { marginTop: 16, padding: 12, alignItems: 'center' },
+    modalCloseButtonText: { color: COLORS.textSecondary, fontFamily: 'Montserrat-Bold' }
 });
